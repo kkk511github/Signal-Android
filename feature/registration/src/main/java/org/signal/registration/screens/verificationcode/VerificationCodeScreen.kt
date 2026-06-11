@@ -73,6 +73,7 @@ fun VerificationCodeScreen(
   modifier: Modifier = Modifier
 ) {
   var digits by remember { mutableStateOf(List(6) { "" }) }
+  var localTestCodeSubmittedForSessionId by remember { mutableStateOf<String?>(null) }
   val focusRequesters = remember { List(6) { FocusRequester() } }
   val snackbarHostState = remember { SnackbarHostState() }
   val resources = LocalResources.current
@@ -90,6 +91,19 @@ fun VerificationCodeScreen(
     if (digits.all { it.isNotEmpty() } && !state.isSubmittingCode) {
       val code = digits.joinToString("")
       onEvent(VerificationCodeScreenEvents.CodeEntered(code))
+    }
+  }
+
+  LaunchedEffect(state.sessionMetadata?.id, state.localTestVerificationCode) {
+    val sessionId = state.sessionMetadata?.id
+    val localTestVerificationCode = state.localTestVerificationCode
+    if (
+      sessionId != null &&
+      localTestVerificationCode != null &&
+      localTestCodeSubmittedForSessionId != sessionId
+    ) {
+      localTestCodeSubmittedForSessionId = sessionId
+      onEvent(VerificationCodeScreenEvents.CodeEntered(localTestVerificationCode))
     }
   }
 

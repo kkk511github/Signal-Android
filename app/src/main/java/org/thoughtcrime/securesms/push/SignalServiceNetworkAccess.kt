@@ -63,7 +63,7 @@ class SignalServiceNetworkAccess(context: Context) {
     )
 
     private fun String.stripProtocol(): String {
-      return this.removePrefix("https://")
+      return this.removePrefix("https://").removePrefix("http://")
     }
 
     private const val COUNTRY_CODE_EGYPT = 20

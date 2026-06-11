@@ -426,7 +426,8 @@ public class ApplicationContext extends Application implements AppForegroundObse
         context -> {
           context.startActivity(new Intent(context, SubmitDebugLogActivity.class));
           return Unit.INSTANCE;
-        }
+        },
+        "Local".equals(BuildConfig.BUILD_ENVIRONMENT_TYPE) ? "12345" : null
       )
     );
   }

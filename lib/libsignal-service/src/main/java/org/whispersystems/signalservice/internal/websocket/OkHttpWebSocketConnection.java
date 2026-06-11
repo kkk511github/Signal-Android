@@ -48,7 +48,6 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.SingleSubject;
-import okhttp3.ConnectionSpec;
 import okhttp3.Credentials;
 import okhttp3.Dns;
 import okhttp3.Interceptor;
@@ -141,7 +140,7 @@ public class OkHttpWebSocketConnection extends WebSocketListener implements WebS
 
       OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder().sslSocketFactory(new Tls12SocketFactory(socketFactory.getFirst()),
                                                                                        socketFactory.getSecond())
-                                                                     .connectionSpecs(serviceUrl.getConnectionSpecs().orElse(Util.immutableList(ConnectionSpec.RESTRICTED_TLS)))
+                                                                     .connectionSpecs(serviceUrl.getDefaultConnectionSpecs())
                                                                      .readTimeout(KEEPALIVE_FREQUENCY_SECONDS + 10, TimeUnit.SECONDS)
                                                                      .dns(dns.orElse(Dns.SYSTEM))
                                                                      .connectTimeout(KEEPALIVE_FREQUENCY_SECONDS + 10, TimeUnit.SECONDS);

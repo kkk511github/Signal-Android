@@ -480,6 +480,28 @@ android {
       buildConfigField("String", "BUILD_ENVIRONMENT_TYPE", "\"Staging\"")
       buildConfigField("String", "STRIPE_PUBLISHABLE_KEY", "\"pk_test_sngOd8FnXNkpce9nPXawKrJD00kIDngZkD\"")
     }
+
+    create("local") {
+      dimension = "environment"
+
+      applicationIdSuffix = ".local"
+
+      buildConfigField("String", "SIGNAL_URL", "\"http://64.83.17.182:8080\"")
+      buildConfigField("String", "STORAGE_URL", "\"http://64.83.17.182:8080\"")
+      buildConfigField("String", "SIGNAL_CDN_URL", "\"http://64.83.17.182:8080\"")
+      buildConfigField("String", "SIGNAL_CDN2_URL", "\"http://64.83.17.182:8080\"")
+      buildConfigField("String", "SIGNAL_CDN3_URL", "\"http://64.83.17.182:8080\"")
+      buildConfigField("String", "SIGNAL_CDSI_URL", "\"http://64.83.17.182:8080\"")
+      buildConfigField("String", "SIGNAL_SVR2_URL", "\"http://64.83.17.182:8080\"")
+      buildConfigField("String", "SIGNAL_SERVICE_STATUS_URL", "\"64.83.17.182:8081\"")
+      buildConfigField("String", "MOBILE_COIN_ENVIRONMENT", "\"testnet\"")
+      buildConfigField("String", "BUILD_ENVIRONMENT_TYPE", "\"Local\"")
+      buildConfigField("String", "SIGNAL_CAPTCHA_URL", "\"https://signalcaptchas.org/staging/registration/generate.html\"")
+      buildConfigField("String", "RECAPTCHA_PROOF_URL", "\"https://signalcaptchas.org/staging/challenge/generate.html\"")
+      buildConfigField("org.signal.libsignal.net.Network.Environment", "LIBSIGNAL_NET_ENV", "org.signal.libsignal.net.Network.Environment.STAGING")
+      buildConfigField("int", "LIBSIGNAL_LOG_LEVEL", "org.signal.libsignal.protocol.logging.SignalProtocolLogger.DEBUG")
+      buildConfigField("String", "STRIPE_PUBLISHABLE_KEY", "\"pk_test_sngOd8FnXNkpce9nPXawKrJD00kIDngZkD\"")
+    }
   }
 
   lint {

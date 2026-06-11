@@ -48,4 +48,14 @@ public class SignalUrl {
     return connectionSpec.isPresent() ? Optional.of(Collections.singletonList(connectionSpec.get())) : Optional.empty();
   }
 
+  public List<ConnectionSpec> getDefaultConnectionSpecs() {
+    return connectionSpec
+        .map(Collections::singletonList)
+        .orElseGet(() -> isCleartext() ? Collections.singletonList(ConnectionSpec.CLEARTEXT)
+                                       : Collections.singletonList(ConnectionSpec.RESTRICTED_TLS));
+  }
+
+  public boolean isCleartext() {
+    return url.regionMatches(true, 0, "http://", 0, "http://".length());
+  }
 }

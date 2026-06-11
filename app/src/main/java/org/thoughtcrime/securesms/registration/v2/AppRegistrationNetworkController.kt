@@ -97,6 +97,7 @@ class AppRegistrationNetworkController(
   companion object {
     private val TAG = Log.tag(AppRegistrationNetworkController::class)
     private val PUSH_REQUEST_TIMEOUT = 5.seconds.inWholeMilliseconds
+    private const val LOCAL_TEST_CAPTCHA_TOKEN = "noop.noop.registration.noop"
   }
 
   private val json = Json { ignoreUnknownKeys = true }
@@ -112,7 +113,7 @@ class AppRegistrationNetworkController(
         when (response.code) {
           200 -> {
             val session = json.decodeFromString<SessionMetadata>(response.body.string())
-            RequestResult.Success(session)
+            RequestResult.Success(satisfyLocalTestCaptchaIfNeeded(session))
           }
           422 -> {
             RequestResult.NonSuccess(CreateSessionError.InvalidRequest(response.body.string()))
@@ -138,7 +139,7 @@ class AppRegistrationNetworkController(
         when (response.code) {
           200 -> {
             val session = json.decodeFromString<SessionMetadata>(response.body.string())
-            RequestResult.Success(session)
+            RequestResult.Success(satisfyLocalTestCaptchaIfNeeded(session))
           }
           400 -> {
             RequestResult.NonSuccess(GetSessionStatusError.InvalidRequest(response.body.string()))
@@ -396,6 +397,30 @@ class AppRegistrationNetworkController(
 
   override fun getCaptchaUrl(): String {
     return BuildConfig.SIGNAL_CAPTCHA_URL
+  }
+
+  private fun satisfyLocalTestCaptchaIfNeeded(session: SessionMetadata): SessionMetadata {
+    if (BuildConfig.BUILD_ENVIRONMENT_TYPE != "Local" || !session.requestedInformation.contains("captcha")) {
+      return session
+    }
+
+    Log.i(TAG, "[LocalTest] Auto-submitting test captcha token.")
+
+    pushServiceSocket.patchVerificationSessionV2(
+      session.id,
+      null,
+      null,
+      null,
+      LOCAL_TEST_CAPTCHA_TOKEN,
+      null
+    ).use { response ->
+      return if (response.code == 200) {
+        json.decodeFromString<SessionMetadata>(response.body.string())
+      } else {
+        Log.w(TAG, "[LocalTest] Test captcha submission failed with response code ${response.code}.")
+        session
+      }
+    }
   }
 
   override suspend fun restoreMasterKeyFromSvr(

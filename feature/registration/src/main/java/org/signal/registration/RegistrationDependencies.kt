@@ -21,7 +21,8 @@ class RegistrationDependencies(
   val storageController: StorageController,
   val isLinkAndSyncAvailable: Boolean,
   val sensitiveLogger: Log.Logger?,
-  val debugLogCallback: ((Context) -> Unit)?
+  val debugLogCallback: ((Context) -> Unit)?,
+  val localTestVerificationCode: String? = null
 ) {
   companion object {
     lateinit var dependencies: RegistrationDependencies

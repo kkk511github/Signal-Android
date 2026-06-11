@@ -5,7 +5,6 @@
 
 package org.whispersystems.signalservice.api
 
-import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import org.whispersystems.signalservice.api.push.TrustStore
 import org.whispersystems.signalservice.api.util.Tls12SocketFactory
@@ -13,7 +12,6 @@ import org.whispersystems.signalservice.api.util.TlsProxySocketFactory
 import org.whispersystems.signalservice.internal.configuration.SignalServiceConfiguration
 import org.whispersystems.signalservice.internal.configuration.SignalUrl
 import org.whispersystems.signalservice.internal.util.BlacklistingTrustManager
-import org.whispersystems.signalservice.internal.util.Util
 import java.security.KeyManagementException
 import java.security.NoSuchAlgorithmException
 import java.util.concurrent.TimeUnit
@@ -36,7 +34,7 @@ fun <T : SignalUrl> T.buildOkHttpClient(configuration: SignalServiceConfiguratio
 
   val builder = OkHttpClient.Builder()
     .sslSocketFactory(socketFactory, trustManager)
-    .connectionSpecs(this.connectionSpecs.orElse(Util.immutableList(ConnectionSpec.RESTRICTED_TLS)))
+    .connectionSpecs(this.defaultConnectionSpecs)
     .retryOnConnectionFailure(false)
     .readTimeout(30, TimeUnit.SECONDS)
     .connectTimeout(30, TimeUnit.SECONDS)

@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.stateIn
 import org.signal.core.util.logging.Log
 import org.signal.libsignal.net.RequestResult
 import org.signal.registration.NetworkController
+import org.signal.registration.RegistrationDependencies
 import org.signal.registration.RegistrationFlowEvent
 import org.signal.registration.RegistrationFlowState
 import org.signal.registration.RegistrationRepository
@@ -34,6 +35,7 @@ class VerificationCodeViewModel(
   private val repository: RegistrationRepository,
   private val parentState: StateFlow<RegistrationFlowState>,
   private val parentEventEmitter: (RegistrationFlowEvent) -> Unit,
+  private val localTestVerificationCode: String? = null,
   private val clock: () -> Long = { System.currentTimeMillis() }
 ) : EventDrivenViewModel<VerificationCodeScreenEvents>(TAG) {
 
@@ -89,6 +91,7 @@ class VerificationCodeViewModel(
     return state.copy(
       sessionMetadata = parentState.sessionMetadata,
       e164 = parentState.sessionE164,
+      localTestVerificationCode = localTestVerificationCode,
       rateLimits = rateLimits
     )
   }
@@ -325,10 +328,11 @@ class VerificationCodeViewModel(
   class Factory(
     private val repository: RegistrationRepository,
     private val parentState: StateFlow<RegistrationFlowState>,
-    private val parentEventEmitter: (RegistrationFlowEvent) -> Unit
+    private val parentEventEmitter: (RegistrationFlowEvent) -> Unit,
+    private val localTestVerificationCode: String? = RegistrationDependencies.get().localTestVerificationCode
   ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-      return VerificationCodeViewModel(repository, parentState, parentEventEmitter) as T
+      return VerificationCodeViewModel(repository, parentState, parentEventEmitter, localTestVerificationCode) as T
     }
   }
 }

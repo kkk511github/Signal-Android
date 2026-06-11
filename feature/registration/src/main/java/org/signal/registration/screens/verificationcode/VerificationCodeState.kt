@@ -17,6 +17,7 @@ data class VerificationCodeState(
   val isSubmittingCode: Boolean = false,
   val rateLimits: SmsAndCallRateLimits = SmsAndCallRateLimits(),
   val incorrectCodeAttempts: Int = 0,
+  val localTestVerificationCode: String? = null,
   val oneTimeEvent: OneTimeEvent? = null
 ) : DebugLoggableModel() {
   sealed interface OneTimeEvent : DebugLoggable {

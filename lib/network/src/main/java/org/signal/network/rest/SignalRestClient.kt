@@ -9,7 +9,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.ConnectionPool
-import okhttp3.ConnectionSpec
 import okhttp3.Credentials
 import okhttp3.Dns
 import okhttp3.HttpUrl
@@ -112,7 +111,7 @@ class SignalRestClient @JvmOverloads constructor(
 
         val builder = OkHttpClient.Builder()
           .sslSocketFactory(Tls12SocketFactory(sslContext.socketFactory), trustManagers[0] as X509TrustManager)
-          .connectionSpecs(url.connectionSpecs.orElse(listOf(ConnectionSpec.RESTRICTED_TLS))!!)
+          .connectionSpecs(url.defaultConnectionSpecs)
           .dns(dns.orElse(Dns.SYSTEM)!!)
           .connectionPool(ConnectionPool(5, 45, TimeUnit.SECONDS))
 
